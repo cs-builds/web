@@ -238,8 +238,6 @@
                 star: <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>,
                 menu: <><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></>,
                 x: <><path d="M18 6 6 18"/><path d="m6 6 12 12"/></>,
-                inFlag: <><rect width="24" height="24" fill="#f97316"/><rect y="8" width="24" height="8" fill="white"/><rect y="16" width="24" height="8" fill="#166534"/><circle cx="12" cy="12" r="3" stroke="#1d4ed8" strokeWidth="2" fill="none"/></>,
-                usFlag: <><rect width="24" height="24" fill="#b91c1c"/><rect y="2" width="24" height="2" fill="white"/><rect y="6" width="24" height="2" fill="white"/><rect y="10" width="24" height="2" fill="white"/><rect y="14" width="24" height="2" fill="white"/><rect y="18" width="24" height="2" fill="white"/><rect y="22" width="24" height="2" fill="white"/><rect width="12" height="13" fill="#1e3a8a"/></>,
                 
                 // Social Icons
                 socialX: <path d="M17.2 3H21L12.5 12.8 22.2 24H14.5L8.5 16.9 1.6 24H-2.2L6.8 13.6-2.5 3H5.3L10.8 9.4 17.2 3ZM15.9 21.8H18L6.4 5.1H4.2L15.9 21.8Z" fill="currentColor" stroke="none"/>,
@@ -356,8 +354,8 @@
                                 onClick={() => onSelect('IN')}
                                 className="group flex-1 md:flex-initial flex flex-col items-center gap-2 p-4 rounded-xl bg-orange-950/30 border border-orange-500/50 hover:bg-orange-900/40 hover:border-orange-400 transition-all interactive min-w-[110px]"
                             >
-                                <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-orange-500/50 shadow-lg group-hover:scale-110 transition-transform relative">
-                                    <Icon name="inFlag" className="w-full h-full scale-150 relative z-10" />
+                                <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-orange-500/50 shadow-lg group-hover:scale-110 transition-transform relative bg-black/50">
+                                    <img src="https://flagcdn.com/w80/in.png" alt="India Flag" className="w-full h-full object-cover relative z-10" />
                                 </div>
                                 <span className="text-xs font-bold tracking-widest text-white group-hover:text-orange-400 transition-colors">INDIA</span>
                             </button>
@@ -366,8 +364,8 @@
                                 onClick={() => onSelect('US')}
                                 className="group flex-1 md:flex-initial flex flex-col items-center gap-2 p-4 rounded-xl bg-blue-950/30 border border-blue-500/50 hover:bg-blue-900/40 hover:border-blue-400 transition-all interactive min-w-[110px]"
                             >
-                                <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-blue-500/50 shadow-lg group-hover:scale-110 transition-transform relative">
-                                    <Icon name="usFlag" className="w-full h-full scale-150 relative z-10" />
+                                <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-blue-500/50 shadow-lg group-hover:scale-110 transition-transform relative bg-black/50">
+                                    <img src="https://flagcdn.com/w80/us.png" alt="USA Flag" className="w-full h-full object-cover relative z-10" />
                                 </div>
                                 <span className="text-xs font-bold tracking-widest text-white group-hover:text-blue-400 transition-colors">USA</span>
                             </button>
@@ -387,6 +385,33 @@
                 return () => window.removeEventListener('scroll', handleScroll);
             }, []);
 
+            // Animation Variants for the Pro Sidebar
+            const sidebarVariants = {
+                closed: { 
+                    x: "100%", 
+                    transition: { 
+                        type: "spring", 
+                        stiffness: 400, 
+                        damping: 40 
+                    } 
+                },
+                open: { 
+                    x: 0, 
+                    transition: { 
+                        type: "spring", 
+                        stiffness: 300, 
+                        damping: 30,
+                        staggerChildren: 0.1,
+                        delayChildren: 0.2
+                    } 
+                }
+            };
+
+            const itemVariants = {
+                closed: { x: 50, opacity: 0 },
+                open: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
+            };
+
             return (
                 <>
                 <motion.nav 
@@ -399,9 +424,10 @@
                             <img src="logo.png" alt="FlowZint" className="h-10 w-auto rounded-xl" />
                         </a>
 
+                        {/* Desktop Menu - Updated to link to HTML files */}
                         <div className="hidden md:flex items-center gap-10">
                             {navItems.map(item => (
-                                <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-slate-400 hover:text-white transition-colors interactive">
+                                <a key={item} href={`${item.toLowerCase()}.html`} className="text-sm font-medium text-slate-400 hover:text-white transition-colors interactive">
                                     {item}
                                 </a>
                             ))}
@@ -411,17 +437,21 @@
                              {region && (
                                 <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/5">
                                     <div className="w-5 h-5 rounded-full overflow-hidden">
-                                        <Icon name={region === 'IN' ? 'inFlag' : 'usFlag'} className="w-full h-full scale-150" />
+                                        <img 
+                                            src={region === 'IN' ? "https://flagcdn.com/w40/in.png" : "https://flagcdn.com/w40/us.png"} 
+                                            alt={region}
+                                            className="w-full h-full object-cover"
+                                        />
                                     </div>
                                     <span className="text-xs font-mono text-slate-300">{region === 'IN' ? 'INR' : 'USD'}</span>
                                 </div>
                              )}
-                             <a href="#contact" className="px-6 py-2 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-void transition-all interactive">
+                             <a href="contact.html" className="px-6 py-2 border border-white/20 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-void transition-all interactive">
                                 Get Proposal
                             </a>
                         </div>
 
-                        <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-white interactive relative z-[110]">
+                        <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden text-white interactive relative z-[110] p-2">
                             <Icon name={menuOpen ? 'x' : 'menu'} />
                         </button>
                     </div>
@@ -429,43 +459,82 @@
 
                 <AnimatePresence>
                     {menuOpen && (
-                        <motion.div 
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="fixed inset-y-0 right-0 w-full md:w-[400px] bg-[#030014]/95 backdrop-blur-2xl border-l border-white/10 z-[100] p-8 flex flex-col"
-                        >
-                            <div className="flex justify-between items-center mb-16">
-                                <img src="logo.png" alt="FlowZint" className="h-10 w-auto rounded-xl" />
-                                <button onClick={() => setMenuOpen(false)} className="text-white hover:text-accent-cyan transition-colors p-2 rounded-full hover:bg-white/5">
-                                    <Icon name="x" className="w-6 h-6" />
-                                </button>
-                            </div>
+                        <>
+                            {/* Backdrop */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setMenuOpen(false)}
+                                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[90] md:hidden"
+                            />
+                            
+                            {/* Pro Sidebar */}
+                            <motion.div 
+                                variants={sidebarVariants}
+                                initial="closed"
+                                animate="open"
+                                exit="closed"
+                                className="fixed inset-y-0 right-0 w-full sm:w-[380px] bg-[#0a0a20]/95 backdrop-blur-2xl border-l border-white/10 z-[100] p-8 flex flex-col shadow-[-20px_0_50px_rgba(0,0,0,0.5)] overflow-hidden"
+                            >
+                                {/* Decorative Glow */}
+                                <div className="absolute top-[-10%] right-[-10%] w-[300px] h-[300px] bg-accent-purple/20 blur-[100px] rounded-full pointer-events-none"></div>
+                                <div className="absolute bottom-[-10%] left-[-10%] w-[200px] h-[200px] bg-accent-cyan/10 blur-[80px] rounded-full pointer-events-none"></div>
 
-                            <div className="flex flex-col gap-8">
-                                {navItems.map((item, i) => (
-                                    <motion.a 
-                                        key={item} 
-                                        href={`#${item.toLowerCase()}`} 
-                                        onClick={() => setMenuOpen(false)}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.1 * i }}
-                                        className="text-3xl font-heading font-bold text-slate-300 hover:text-white hover:pl-4 transition-all flex items-center gap-4 group"
+                                <div className="flex justify-between items-center mb-16 relative z-10">
+                                    <img src="logo.png" alt="FlowZint" className="h-10 w-auto rounded-xl" />
+                                    <button 
+                                        onClick={() => setMenuOpen(false)} 
+                                        className="text-white hover:text-accent-cyan transition-colors p-2 rounded-full hover:bg-white/10 border border-transparent hover:border-white/10"
                                     >
-                                        <span className="text-sm font-mono text-accent-cyan opacity-0 group-hover:opacity-100 transition-opacity">0{i+1}</span>
-                                        {item}
-                                    </motion.a>
-                                ))}
-                            </div>
+                                        <Icon name="x" className="w-6 h-6" />
+                                    </button>
+                                </div>
 
-                            <div className="mt-auto pt-8 border-t border-white/10">
-                                <p className="text-slate-500 text-xs uppercase tracking-widest mb-4">Contact</p>
-                                <a href="mailto:hello@flowzint.com" className="block text-white text-sm mb-2 hover:text-accent-cyan transition-colors">hello@flowzint.com</a>
-                                <div className="text-slate-500 text-xs mt-4">© 2026 FlowZint Tech.</div>
-                            </div>
-                        </motion.div>
+                                <div className="flex flex-col gap-6 relative z-10">
+                                    {navItems.map((item, i) => (
+                                        <motion.a 
+                                            key={item} 
+                                            variants={itemVariants}
+                                            href={`${item.toLowerCase()}.html`} 
+                                            className="group relative flex items-center justify-between p-2"
+                                        >
+                                            <div className="flex items-center gap-4">
+                                                <span className="text-xs font-mono text-accent-cyan/50 group-hover:text-accent-cyan transition-colors">0{i+1}</span>
+                                                <span className="text-4xl font-heading font-bold text-slate-300 group-hover:text-white transition-colors">{item}</span>
+                                            </div>
+                                            <span className="opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0 text-accent-cyan">
+                                                <Icon name="arrow" className="w-5 h-5" />
+                                            </span>
+                                            {/* Hover Line Effect */}
+                                            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-gradient-to-r from-accent-cyan to-transparent group-hover:w-full transition-all duration-500"></span>
+                                        </motion.a>
+                                    ))}
+                                </div>
+
+                                <motion.div 
+                                    variants={itemVariants}
+                                    className="mt-auto pt-8 border-t border-white/10 relative z-10"
+                                >
+                                    <p className="text-slate-500 text-xs uppercase tracking-widest mb-4">Quick Contact</p>
+                                    <a href="mailto:hello@flowzint.com" className="block text-white text-lg mb-2 hover:text-accent-cyan transition-colors font-medium">hello@flowzint.com</a>
+                                    <div className="flex gap-4 mt-6">
+                                        <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-accent-cyan hover:text-void transition-all border border-white/10 hover:border-accent-cyan">
+                                            <Icon name="socialX" className="w-4 h-4" />
+                                        </a>
+                                        <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-accent-cyan hover:text-void transition-all border border-white/10 hover:border-accent-cyan">
+                                            <Icon name="socialLi" className="w-4 h-4" />
+                                        </a>
+                                        <a href="#" className="p-2 bg-white/5 rounded-full hover:bg-accent-cyan hover:text-void transition-all border border-white/10 hover:border-accent-cyan">
+                                            <Icon name="socialInsta" className="w-4 h-4" />
+                                        </a>
+                                    </div>
+                                    <div className="text-slate-600 text-[10px] mt-6 font-mono">
+                                        SYSTEM ID: FLWZ-2026-X
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        </>
                     )}
                 </AnimatePresence>
                 </>
@@ -474,7 +543,8 @@
 
         const Hero = ({ region }) => {
             return (
-                <section className="relative flex flex-col justify-start pt-32 pb-8 md:min-h-screen md:justify-center overflow-hidden">
+                // UPDATED: Removed md:min-h-screen, reduced bottom padding to remove gap
+                <section className="relative flex flex-col justify-start pt-32 pb-16 md:pt-48 md:pb-24 overflow-hidden">
                     <div className="absolute inset-0 z-0 overflow-hidden">
                         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-accent-purple/20 blur-[100px] rounded-full animate-blob"></div>
                         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent-cyan/10 blur-[80px] rounded-full animate-blob" style={{animationDelay: '2s'}}></div>
@@ -520,10 +590,10 @@
                             transition={{ delay: 1.1 }}
                             className="flex flex-col sm:flex-row items-center justify-center gap-4"
                         >
-                            <a href="#contact" className="interactive px-6 py-3 bg-white text-void font-bold text-base rounded hover:bg-slate-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] w-full sm:w-auto">
+                            <a href="contact.html" className="interactive px-6 py-3 bg-white text-void font-bold text-base rounded hover:bg-slate-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] w-full sm:w-auto">
                                 Initiate Launch
                             </a>
-                            <a href="#work" className="interactive px-6 py-3 text-white border border-white/20 rounded font-medium hover:bg-white/10 transition-colors flex items-center justify-center gap-2 w-full sm:w-auto text-base">
+                            <a href="work.html" className="interactive px-6 py-3 text-white border border-white/20 rounded font-medium hover:bg-white/10 transition-colors flex items-center justify-center gap-2 w-full sm:w-auto text-base">
                                 View Architecture <Icon name="arrow" className="w-4 h-4" />
                             </a>
                         </motion.div>
@@ -534,9 +604,10 @@
 
         const Services = ({ region }) => {
             return (
-                <section id="services" className="pt-10 pb-20 md:py-32 relative bg-void">
+                // UPDATED: Reduced vertical padding to remove waste gap
+                <section id="services" className="py-16 md:py-24 relative bg-void">
                     <div className="w-full max-w-[95%] 2xl:max-w-screen-2xl mx-auto px-4 md:px-8">
-                        <div className="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-24 border-b border-white/10 pb-8">
+                        <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-white/10 pb-8">
                             <div>
                                 <h4 className="text-accent-cyan font-mono text-xs tracking-widest uppercase mb-3">Capabilities</h4>
                                 <h2 className="text-3xl md:text-5xl font-heading font-bold">Core Modules</h2>
@@ -591,11 +662,12 @@
 
         const Work = () => {
             return (
-                <section id="work" className="py-20 md:py-32 bg-panel relative overflow-hidden">
+                // UPDATED: Reduced padding
+                <section id="work" className="py-16 md:py-24 bg-panel relative overflow-hidden">
                     <div className="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
                     
                     <div className="w-full max-w-[95%] 2xl:max-w-screen-2xl mx-auto px-4 md:px-8 relative z-10">
-                        <div className="mb-12 md:mb-24">
+                        <div className="mb-12">
                             <h2 className="text-3xl md:text-5xl font-heading font-bold mb-4">Selected Works</h2>
                             <p className="text-slate-400 text-sm md:text-base">Engineering excellence deployed in the wild.</p>
                         </div>
@@ -646,7 +718,8 @@
             ];
 
             return (
-                <section id="process" className="py-20 md:py-32 bg-void relative">
+                // UPDATED: Reduced padding
+                <section id="process" className="py-16 md:py-24 bg-void relative">
                     <div className="w-full max-w-[95%] 2xl:max-w-screen-2xl mx-auto px-4 md:px-8">
                         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
                             <div className="lg:sticky lg:top-32 h-fit relative">
@@ -654,7 +727,7 @@
                                 <p className="text-slate-400 text-base mb-8 leading-relaxed">
                                     Chaos is the enemy of scale. We utilize a battle-tested engineering methodology that eliminates risk and guarantees velocity.
                                 </p>
-                                <a href="#contact" className="px-6 py-3 bg-white text-void font-bold rounded hover:bg-slate-200 transition-colors inline-block interactive text-sm">
+                                <a href="contact.html" className="px-6 py-3 bg-white text-void font-bold rounded hover:bg-slate-200 transition-colors inline-block interactive text-sm">
                                     Start Discovery Phase
                                 </a>
                             </div>
@@ -701,7 +774,8 @@
             }
         ];
             return (
-                <section id="reviews" className="py-20 md:py-32 bg-panel relative">
+                // UPDATED: Reduced padding
+                <section id="reviews" className="py-16 md:py-24 bg-panel relative">
                     <div className="w-full max-w-[95%] 2xl:max-w-screen-2xl mx-auto px-4 md:px-8">
                          <div className="text-center mb-16">
                             <h2 className="text-3xl font-heading font-bold">Trust Protocols</h2>
@@ -740,7 +814,8 @@
             }
 
             return (
-                <section id="contact" className="py-20 md:py-32 bg-void relative overflow-hidden">
+                // UPDATED: Reduced padding
+                <section id="contact" className="py-16 md:py-24 bg-void relative overflow-hidden">
                     <div className="absolute inset-0 bg-hero-glow opacity-20"></div>
                     
                     <div className="w-full max-w-[95%] 2xl:max-w-screen-2xl mx-auto px-4 md:px-8 relative z-10">
